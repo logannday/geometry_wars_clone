@@ -1,0 +1,25 @@
+#include <iostream>
+#include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
+#include "Game.h"
+#include "Vec2.h"
+
+int main(int argc, char * argv[])
+{
+    Vec2 v1(1,1);
+    Vec2 v2(2,3);
+    Vec2 v3 = v1 + v2;
+    Vec2 v4(1,1);
+
+    std::cout << v3.x << " " << v3.y << "\n";
+    v3 += v1;
+    std::cout << v3.x << " " << v3.y << "\n";
+    v1.add(v2).add(v3);
+    std::cout << v1.x << " " << v1.y << "\n";
+    std::cout << "test(==) (false) : " << (v1 == v2);
+
+
+    // Game myGame("todo: Config");
+    // myGame.run();
+    return 0;
+}
