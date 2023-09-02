@@ -12,12 +12,14 @@
 void testVec();
 void testComponents();
 void testManager();
+void testGame();
 
 int main(int argc, char * argv[])
 {
     //testVec();
     //testComponents();
     //testManager();
+    //testGame();
 
     Game myGame("todo: Config");
     myGame.run();
@@ -70,4 +72,10 @@ void testManager()
     em.update();
     em.print();
     std::cout << "\n";
+}
+
+void testGame()
+{
+    Entity entity(420, "Logan");
+    // entity.cInput->left;
 }

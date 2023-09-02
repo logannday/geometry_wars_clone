@@ -65,4 +65,3 @@ EntityVec& EntityManager::getEntities(const std::string& tag)
     std::cerr << "Entity NOT FOUND BOI during getEntities(" << tag;
     exit(1);
 }
-

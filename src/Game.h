@@ -16,7 +16,10 @@ class Game
     void sRender();
     void sUserInput();
     void sSpawnPlayer();
-    void handleKey(sf::Event event);
+    void sMovement();
+    void HandleKey(sf::Event event);
+    //TODO: 
+    //void sEnemySpawner();
 
 public:
     Game(std::string s);

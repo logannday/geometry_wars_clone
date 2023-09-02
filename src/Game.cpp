@@ -32,6 +32,11 @@ void Game::sRender()
     m_window.display();
 }
 
+            // add velocity to position
+            // Vec2 &velocity = m_player->cTransform->velocity;
+            // Vec2 &position = m_player->cTransform->pos;
+            // position.x += velocity.x;
+            // position.y += velocity.y;
 void Game::sUserInput()
 {
     sf::Event event;
@@ -39,14 +44,91 @@ void Game::sUserInput()
     while(m_window.pollEvent(event))
     {
         // player movement
-        switch(event.type) 
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
         {
-            case sf::Event::KeyPressed:
-                break;
+            std::cout << "working";
+            m_player->cInput->right = true;
+        } else {
+            m_player->cInput->right = false;
         }
-    
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+        {
+            m_player->cInput->left = true;
+        } else {
+            m_player->cInput->left = false;
+        }
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+        {
+            m_player->cInput->up = true;
+        } else {
+            m_player->cInput->up = false;
+        }
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+        {
+            m_player->cInput->down = true;
+        } else {
+            m_player->cInput->down = false;
+        }
     };
 }
+
+void Game::sMovement()
+{
+    //Player Movement
+    // m_player->cTransform->velocity = {0, 0};
+    Vec2 &playerVel= m_player->cTransform->velocity;
+    Vec2 &playerPos= m_player->cTransform->pos;
+    for (auto& e : m_entities.getEntities())
+    {
+        e->cTransform->velocity = {0, 0};
+    }
+
+    // Player Horizontal Movement
+    // TODO: Make it impossible to leave the window
+    if(m_player->cInput->right)
+    {
+        playerVel.x = 0.1;
+    }
+    else if(m_player->cInput->left)
+    {
+        playerVel.x = -0.1;
+    }
+    else if(m_player->cInput->left && m_player->cInput->left)
+    {
+        playerVel.x = -0.1;
+    }
+
+    // Player Vertical Movement
+    if(m_player->cInput->down)
+    {
+        playerVel.y = 0.1;
+    }
+    else if(m_player->cInput->up)
+    {
+        playerVel.y = -0.1f;
+    }
+    else if(m_player->cInput->down && m_player->cInput->up)
+    {
+        playerVel.y = 0.0f;
+    }
+
+    // float playerX = m_player->cShape->circle.getPosition().x;
+
+    // playerPos += playerVel;
+    // m_player->cShape->circle.setPosition(
+    //         playerPos.x, playerPos.y);
+    for (auto& e : m_entities.getEntities())
+    {
+        Vec2& position = e->cTransform->pos;
+        Vec2& velocity = e->cTransform->velocity;
+        position += velocity;
+        e->cShape->circle.setPosition(position.x, position.y);
+    }
+}
+
 
 void Game::sSpawnPlayer()
 {
@@ -58,6 +140,9 @@ void Game::sSpawnPlayer()
     // entity->cTransform = std::make_shared<CTransform>
     //    (Vec2(200.0f, 200.0f), Vec2(1.0f, 1.0f), 1.0f);
     entity->cShape = std::make_shared<CShape>(32.0f, 8, sf::Color(10, 10, 10), sf::Color(25, 0, 0), 4.0f);
+
+    entity->cInput = std::make_shared<CInput>();
+
     m_player = entity;
 }
 
@@ -68,6 +153,7 @@ void Game::run()
     while (m_running) 
     {
         sUserInput();
+        sMovement();
         m_entities.update();
         sRender();
         // Todo: implement other functions
