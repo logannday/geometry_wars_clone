@@ -4,8 +4,11 @@ Naive Game Engine
 - based on lecture series from Dave Churchill
 - Can only display one scene
 Todo:
-[] Finish entity manager 
-
+[x] Finish entity manager 
+[ ] Make it impossible for player/ entities to leave the window
+[ ] Implement Spawn Bullet
+[ ] Implement Spawn Enemy
+[ ] Implement Collisions
 
 Notes:
 - Set origin of the circle to the middleo

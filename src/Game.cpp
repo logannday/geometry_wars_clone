@@ -134,9 +134,14 @@ void Game::sSpawnPlayer()
 {
     auto entity = m_entities.addEntity("player");
     std::cout << "entities.size: " << m_entities.getEntities().size();
-    Vec2 v1 = {200.0f, 200.0f};
-    Vec2 v2 = {2.0f, 2.0f};
-    entity->cTransform = std::make_shared<CTransform>(v1, v2, 1.0f);
+    sf::Vector2u size = m_window.getSize();
+    // TODO: figure out if passing in local variable references 
+    // could be problematic here
+    unsigned int windowWidth = size.x;
+    unsigned int windowHeight = size.y;
+    Vec2 position = {windowWidth / 2.0f, windowHeight / 2.0f};
+    Vec2 velocity = {0.0f, 0.0f};
+    entity->cTransform = std::make_shared<CTransform>(position, velocity, 1.0f);
     // entity->cTransform = std::make_shared<CTransform>
     //    (Vec2(200.0f, 200.0f), Vec2(1.0f, 1.0f), 1.0f);
     entity->cShape = std::make_shared<CShape>(32.0f, 8, sf::Color(10, 10, 10), sf::Color(25, 0, 0), 4.0f);
@@ -156,7 +161,7 @@ void Game::run()
         sMovement();
         m_entities.update();
         sRender();
-        // Todo: implement other functions
+        // TODO: implement other functions
     }
 }
 
