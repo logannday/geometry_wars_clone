@@ -1,3 +1,4 @@
+#pragma once
 #include <memory>
 #include <string>
 #include "Components.h"
@@ -14,15 +15,15 @@ public:
     Entity(const size_t id, const std::string& tag);
     // conponent pointers
     std::shared_ptr<CTransform> cTransform;
-    std::shared_ptr<CShape> Shape;
+    std::shared_ptr<CShape> cShape;
     std::shared_ptr<CCollision> cCollision;
     std::shared_ptr<CInput> cInput;
     std::shared_ptr<CScore> Score;
     std::shared_ptr<CLifespan> cLifespan;
 
     // private member access functions bool isActive() const;
-    bool isactive() const;
+    bool isActive() const;
     const std::string & tag() const;
     const size_t id() const;
-    void destroy ();
+    void destroy();
 };

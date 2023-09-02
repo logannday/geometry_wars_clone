@@ -3,6 +3,8 @@ Naive Game Engine
 - for educational and recreational purposes
 - based on lecture series from Dave Churchill
 - Can only display one scene
+Todo:
+[] Finish entity manager 
 
 
 Notes:

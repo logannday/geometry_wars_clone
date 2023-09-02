@@ -5,7 +5,7 @@ Entity::Entity(const size_t id, const std::string& tag)
 {
 }
 
-bool Entity::isactive() const
+bool Entity::isActive() const
 {
     return m_active;
 }
@@ -20,4 +20,7 @@ const size_t Entity::id() const
     return m_id;
 }
 
-void destroy ();
+void Entity::destroy()
+{
+    m_active = false;
+}

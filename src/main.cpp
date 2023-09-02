@@ -7,6 +7,7 @@
 #include "Vec2.h"
 #include "Components.h"
 #include "EntityManager.h"
+#include "Entity.h"
 
 void testVec();
 void testComponents();
@@ -14,12 +15,12 @@ void testManager();
 
 int main(int argc, char * argv[])
 {
-    testVec();
-    testComponents();
-    testManager();
+    //testVec();
+    //testComponents();
+    //testManager();
 
-    // Game myGame("todo: Config");
-    // myGame.run();
+    Game myGame("todo: Config");
+    myGame.run();
     return 0;
 }
 
@@ -46,7 +47,7 @@ void testComponents()
     Vec2 v1(1,1);
     Vec2 v2(2,2);
     CTransform trans(v1, v2, 3.14f);
-    // std::cout << trans.pos.x << " " << trans.velocity.y << "\n";
+     std::cout << trans.pos.x << " " << trans.velocity.y << "\n";
     CCollision col(1.1);
     // std::cout << "radius: " << col.radius << "\n";
 }
@@ -55,4 +56,18 @@ void testManager()
 {
     EntityManager em;
     em.addEntity("Boss");
+    em.addEntity("Peen");
+    em.addEntity("Penus");
+    em.addEntity("Swag");
+    em.update();
+    em.print();
+    std::cout << "\n";
+    auto entities = em.getEntities();
+    for (auto& e : entities)
+    {
+        e->destroy();
+    }
+    em.update();
+    em.print();
+    std::cout << "\n";
 }

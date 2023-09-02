@@ -1,9 +1,9 @@
 CXX := g++
 OUTPUT := sfmlgame
 
-CXX_FLAGS := -std=c++17 -O3 
+CXX_FLAGS := -std=c++17 -g
 INCLUDES := I./src .
-LDFLAGS := -O3 -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
+LDFLAGS := -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 
 SRC_FILES := $(wildcard src/*.cpp)
 OBJ_FILES := $(SRC_FILES: .cpp=.0)

@@ -10,8 +10,8 @@ public:
     float angle = 0.0f;
 
     // Note: I'm passing in references here
-    CTransform(Vec2 & v, Vec2 & p, float a)
-        :velocity(v), pos(p), angle(a)
+    CTransform(Vec2 & p, Vec2 & v, float a)
+        :pos(p), velocity(v), angle(a)
     {}
 
 };
