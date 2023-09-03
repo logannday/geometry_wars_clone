@@ -1,4 +1,6 @@
 #include <SFML/Graphics.hpp>
+#include <stdlib.h>
+#include <time.h>
 #include <iostream>
 #include "Game.h"
 #include "Entity.h"
@@ -43,36 +45,48 @@ void Game::sUserInput()
 
     while(m_window.pollEvent(event))
     {
-        // player movement
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+        switch(event.type)
         {
-            std::cout << "working";
-            m_player->cInput->right = true;
-        } else {
-            m_player->cInput->right = false;
-        }
-
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-        {
-            m_player->cInput->left = true;
-        } else {
-            m_player->cInput->left = false;
-        }
-
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-        {
-            m_player->cInput->up = true;
-        } else {
-            m_player->cInput->up = false;
-        }
-
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-        {
-            m_player->cInput->down = true;
-        } else {
-            m_player->cInput->down = false;
+            case (sf::Event::MouseButtonPressed):
+                if (event.mouseButton.button == sf::Mouse::Left)
+                {
+                    Vec2 mouseVec = {(float)event.mouseButton.x, (float)event.mouseButton.y};
+                    sSpawnBullet(mouseVec);
+                }
+                break;
+            default:
+                break;
         }
     };
+    // player movement
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+    {
+        std::cout << "working";
+        m_player->cInput->right = true;
+    } else {
+        m_player->cInput->right = false;
+    }
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+    {
+        m_player->cInput->left = true;
+    } else {
+        m_player->cInput->left = false;
+    }
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+    {
+        m_player->cInput->up = true;
+    } else {
+        m_player->cInput->up = false;
+    }
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+    {
+        m_player->cInput->down = true;
+    } else {
+        m_player->cInput->down = false;
+    }
 }
 
 void Game::sMovement()
@@ -81,10 +95,7 @@ void Game::sMovement()
     // m_player->cTransform->velocity = {0, 0};
     Vec2 &playerVel= m_player->cTransform->velocity;
     Vec2 &playerPos= m_player->cTransform->pos;
-    for (auto& e : m_entities.getEntities())
-    {
-        e->cTransform->velocity = {0, 0};
-    }
+    m_player->cTransform->velocity = {0, 0};
 
     // Player Horizontal Movement
     // TODO: Make it impossible to leave the window
@@ -115,17 +126,35 @@ void Game::sMovement()
         playerVel.y = 0.0f;
     }
 
-    // float playerX = m_player->cShape->circle.getPosition().x;
+    sf::Vector2u size = m_window.getSize();
+    unsigned int width = size.x;
+    unsigned int height = size.y;
 
-    // playerPos += playerVel;
-    // m_player->cShape->circle.setPosition(
-    //         playerPos.x, playerPos.y);
+    // Enemy Wall Collision Handling
+    for (auto& e : m_entities.getEntities())
+    {
+        float x = e->cShape->circle.getPosition().x;
+        float y = e->cShape->circle.getPosition().y;
+        Vec2& velocity = e->cTransform->velocity;
+        int radius = e->cShape->circle.getRadius();
+
+        if (x - radius <= 0 || x >= width - radius)
+        {
+            e->cTransform->velocity.x *= -1.0f;
+        }
+        if (y <= 0 + radius || y >= height - radius)
+        {
+            e->cTransform->velocity.y *= -1.0f;
+        }
+    }
+
     for (auto& e : m_entities.getEntities())
     {
         Vec2& position = e->cTransform->pos;
         Vec2& velocity = e->cTransform->velocity;
         position += velocity;
         e->cShape->circle.setPosition(position.x, position.y);
+        e->cShape->circle.setRotation(e->cShape->circle.getRotation() + e->cTransform->angle);
     }
 }
 
@@ -134,21 +163,45 @@ void Game::sSpawnPlayer()
 {
     auto entity = m_entities.addEntity("player");
     std::cout << "entities.size: " << m_entities.getEntities().size();
-    sf::Vector2u size = m_window.getSize();
     // TODO: figure out if passing in local variable references 
     // could be problematic here
-    unsigned int windowWidth = size.x;
-    unsigned int windowHeight = size.y;
-    Vec2 position = {windowWidth / 2.0f, windowHeight / 2.0f};
+    Vec2 position = {m_window.getSize().x / 2.0f, m_window.getSize().y  / 2.0f};
     Vec2 velocity = {0.0f, 0.0f};
     entity->cTransform = std::make_shared<CTransform>(position, velocity, 1.0f);
-    // entity->cTransform = std::make_shared<CTransform>
-    //    (Vec2(200.0f, 200.0f), Vec2(1.0f, 1.0f), 1.0f);
     entity->cShape = std::make_shared<CShape>(32.0f, 8, sf::Color(10, 10, 10), sf::Color(25, 0, 0), 4.0f);
 
     entity->cInput = std::make_shared<CInput>();
 
     m_player = entity;
+}
+
+void Game::sSpawnEnemy()
+{
+    if (m_currentFrame - m_lastEnemySpawnTime < 5000) { return; }
+    m_lastEnemySpawnTime = m_currentFrame;
+    std::cout << "Hello?";
+    auto entity = m_entities.addEntity("enemy");
+    sf::Vector2u size = m_window.getSize();
+    /* initialize random seed: */
+    srand (time(NULL));
+    /* generate secret number between 0 and window dimensions : */
+    // TODO: change this to make sure they don't spawn partially off screen
+    int xPosition = rand() % m_window.getSize().x;
+    int yPosition = rand() % m_window.getSize().y;
+    int numSides = rand() % 8;
+
+    Vec2 position = {(float) xPosition, (float) yPosition};
+    Vec2 velocity = {0.05f, 0.05f};
+    entity->cTransform = std::make_shared<CTransform>(position, velocity, 0.05f);
+    entity->cShape = std::make_shared<CShape>(32.0f, numSides, sf::Color(10, 10, 10), sf::Color(25, 0, 0), 4.0f);
+    entity->cInput = std::make_shared<CInput>();
+}
+
+void Game::sSpawnBullet(Vec2 & mousePosition)
+{
+    Vec2 bulletVec = mousePosition - m_player->cTransform->pos;
+    bulletVec.normalize();
+    std::cout << bulletVec.x << " " << bulletVec.y << "\n";
 }
 
 void Game::run()
@@ -157,7 +210,9 @@ void Game::run()
     std::cout << "hello?";
     while (m_running) 
     {
+        m_currentFrame++;
         sUserInput();
+        sSpawnEnemy();
         sMovement();
         m_entities.update();
         sRender();

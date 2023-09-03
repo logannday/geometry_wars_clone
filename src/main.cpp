@@ -64,7 +64,7 @@ void testManager()
     em.update();
     em.print();
     std::cout << "\n";
-    auto entities = em.getEntities();
+    auto entities = em.getEntities("Peen");
     for (auto& e : entities)
     {
         e->destroy();
