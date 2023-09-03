@@ -23,6 +23,7 @@ class Game
     //TODO: 
     void sSpawnEnemy();
     void sSpawnBullet(Vec2 & mousePosition);
+    void sLifetimes();
         
 public:
     Game(std::string s);

@@ -5,9 +5,11 @@ Naive Game Engine
 - Can only display one scene
 Todo:
 [x] Finish entity manager 
-[ ] Make it impossible for player/ entities to leave the window
-[ ] Implement Spawn Bullet
-[ ] Implement Spawn Enemy
+[x] Implement Spawn Bullet
+[x] Implement Spawn Enemy
+[ ] Fix getEntities
+[ ] Bullet Lifetimes
+[ ] Make it impossible for player entities to leave the window
 [ ] Implement Collisions
 
 Notes:

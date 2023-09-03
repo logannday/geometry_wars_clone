@@ -55,13 +55,14 @@ EntityVec& EntityManager::getEntities()
 
 EntityVec& EntityManager::getEntities(const std::string& tag)
 {
-    for (auto& [key, entityVec] : m_entityMap)
+    // note, I removed the & off of auto&
+    for (auto [key, entityVec] : m_entityMap)
     {
         if(key.compare(tag) == 0)
         {
             return entityVec;
         }
     }
-    std::cerr << "Entity NOT FOUND BOI during getEntities(" << tag;
-    exit(1);
+    std::cerr << "\n NO ENTITIES RETURNED\n";
+    throw 420;
 }

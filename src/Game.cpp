@@ -34,11 +34,6 @@ void Game::sRender()
     m_window.display();
 }
 
-            // add velocity to position
-            // Vec2 &velocity = m_player->cTransform->velocity;
-            // Vec2 &position = m_player->cTransform->pos;
-            // position.x += velocity.x;
-            // position.y += velocity.y;
 void Game::sUserInput()
 {
     sf::Event event;
@@ -61,7 +56,6 @@ void Game::sUserInput()
     // player movement
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
     {
-        std::cout << "working";
         m_player->cInput->right = true;
     } else {
         m_player->cInput->right = false;
@@ -158,6 +152,21 @@ void Game::sMovement()
     }
 }
 
+void Game::sLifetimes()
+{
+    // Hackey and disgusting
+    try {
+        for (auto& e : m_entities.getEntities("bullet"))
+        {
+            std::cout << "in loop";
+            if (e->cLifespan->remaining-- <= 0)
+            {
+                e->destroy();
+            }
+        }
+    } catch(...) {
+    }
+}
 
 void Game::sSpawnPlayer()
 {
@@ -198,14 +207,15 @@ void Game::sSpawnEnemy()
 
 void Game::sSpawnBullet(Vec2 & mousePosition)
 {
+    auto entity = m_entities.addEntity("bullet");
+    entity->cLifespan = std::make_shared<CLifespan>(50);
+
     Vec2 &playerPosition = m_player->cTransform->pos;
     Vec2 bulletVelocity = playerPosition - mousePosition;
     bulletVelocity.normalize();
     bulletVelocity = bulletVelocity * 0.5f;
-    auto entity = m_entities.addEntity("bullet");
 
-    Vec2 position = {playerPosition.x, playerPosition.y};
-    entity->cTransform = std::make_shared<CTransform>(position, bulletVelocity, 0.05f);
+    entity->cTransform = std::make_shared<CTransform>(m_player->cTransform->pos, bulletVelocity, 0.05f);
     entity->cShape = std::make_shared<CShape>(10.0f, 8, sf::Color(50, 50, 10), sf::Color(25, 0, 0), 4.0f);
     entity->cInput = std::make_shared<CInput>();
 }
@@ -220,6 +230,7 @@ void Game::run()
         sUserInput();
         sSpawnEnemy();
         sMovement();
+        sLifetimes();
         m_entities.update();
         sRender();
         // TODO: implement other functions
