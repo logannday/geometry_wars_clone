@@ -179,7 +179,6 @@ void Game::sSpawnEnemy()
 {
     if (m_currentFrame - m_lastEnemySpawnTime < 5000) { return; }
     m_lastEnemySpawnTime = m_currentFrame;
-    std::cout << "Hello?";
     auto entity = m_entities.addEntity("enemy");
     sf::Vector2u size = m_window.getSize();
     /* initialize random seed: */
@@ -199,9 +198,16 @@ void Game::sSpawnEnemy()
 
 void Game::sSpawnBullet(Vec2 & mousePosition)
 {
-    Vec2 bulletVec = mousePosition - m_player->cTransform->pos;
-    bulletVec.normalize();
-    std::cout << bulletVec.x << " " << bulletVec.y << "\n";
+    Vec2 &playerPosition = m_player->cTransform->pos;
+    Vec2 bulletVelocity = playerPosition - mousePosition;
+    bulletVelocity.normalize();
+    bulletVelocity = bulletVelocity * 0.5f;
+    auto entity = m_entities.addEntity("bullet");
+
+    Vec2 position = {playerPosition.x, playerPosition.y};
+    entity->cTransform = std::make_shared<CTransform>(position, bulletVelocity, 0.05f);
+    entity->cShape = std::make_shared<CShape>(10.0f, 8, sf::Color(50, 50, 10), sf::Color(25, 0, 0), 4.0f);
+    entity->cInput = std::make_shared<CInput>();
 }
 
 void Game::run()
@@ -219,5 +225,3 @@ void Game::run()
         // TODO: implement other functions
     }
 }
-
-
