@@ -32,6 +32,8 @@ public:
     float length() const;
 
     void normalize();
+
+    float distance(Vec2 & vec);
     
 };
 

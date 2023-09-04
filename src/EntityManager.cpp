@@ -3,7 +3,7 @@
 
 EntityManager::EntityManager() {};
 
-std::shared_ptr<Entity> EntityManager::addEntity (const std::string& tag)
+std::shared_ptr<Entity> EntityManager::addEntity (const std::string tag)
 {
     auto e = std::make_shared<Entity>(m_totalEntities++, tag);
     m_toAdd.push_back(e);
@@ -63,6 +63,16 @@ EntityVec& EntityManager::getEntities(const std::string& tag)
             return entityVec;
         }
     }
-    std::cerr << "\n NO ENTITIES RETURNED\n";
-    throw 420;
+    // Sketchy empty static vector
+    static EntityVec vec;
+    return vec;
+}
+
+void EntityManager::printMap()
+{
+    for (auto [key, val] : m_entityMap)
+    {
+        std::cerr << key << " ";
+    }
+    std::cerr << "\n";
 }

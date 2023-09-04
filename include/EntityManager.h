@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <memory>
+#include <iostream>
 #include "Entity.h"
 
 typedef std::vector<std::shared_ptr<Entity>> EntityVec; 
@@ -16,10 +17,11 @@ class EntityManager
 
 public:
     EntityManager();
-    std::shared_ptr<Entity> addEntity (const std::string& tag);
+    std::shared_ptr<Entity> addEntity (const std::string tag);
     EntityVec& getEntities();
     EntityVec& getEntities(const std::string& tag);
     void removeDeadEntities(EntityVec & vec);
     void update();
     void print();
+    void printMap();
 };

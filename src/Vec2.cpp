@@ -59,3 +59,8 @@ void Vec2::normalize()
     x = x / l;
     y = y / l;
 }
+
+float Vec2::distance(Vec2 & vec)
+{
+    return sqrt(pow(x - vec.x, 2) + pow(y - vec.y, 2));
+}
