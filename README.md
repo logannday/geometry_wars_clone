@@ -11,7 +11,7 @@ Geometry Wars Clone from Scratch
 - For educational and recreational purposes
 - Inspiration drawn from lecture series from [Dave Churchill's COMP4300 class](https://www.youtube.com/watch?v=S7lXSihz0ac&list=PL_xRyXins848nDj2v-TJYahzvsXW9sVV)
 - This game is in progress! I'm still ironing out some bugs
-Todo:
+#### Todo:
 [x] Finish entity manager 
 [x] Implement Spawn Bullet
 [x] Implement Spawn Enemy
